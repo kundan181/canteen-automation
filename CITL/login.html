@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title style="color: darkgreen;">Login</title>
+    
+    <style>
+        body {
+            background-image: url('can.jpg');
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
+    <style>
+        /* Style the Google Sign-In button container */
+        #google-signin-button {
+            margin: 20px;
+        }
+    </style>
+    
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: darkgreen; border-color: darkgreen;">
+        <div class="container">
+            <div class="navbar-header">
+                <button class="navbar-toggle" data-toggle="collapse" data-target="#abc">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand text-center" href="First Page.html" style="color: white;">Welcome to Canteen Automation System</a>
+            </div>
+            <div class="collapse navbar-collapse" id="abc">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="sign up.html"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div style="margin-top: 100px;">
+        <div class="container">
+            <div class="row row-style">
+                <div class="col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h1>Login</h1>
+                        </div>
+                        <div class="panel-body">
+                            <p class="text-warning">Login to Order Food</p>
+                            <div class="form-group">
+                                <input class="form-control" type="email" placeholder="Email" id="email" required="true">
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" type="password" placeholder="Password" id="password" required="true">
+                            </div>
+                            <button type="button" class="btn btn-success btn-lg-active" style="background-color: darkgreen;" onclick="login()">Login</button>
+                            <!-- Google Sign-In button -->
+                            <div id="google-signin-button" class="g-signin2" data-onsuccess="onSignIn" data-clientid='415495562108'></div>
+
+
+                        </div>
+                        <div class="panel-footer">Don't have an account? <a href="sign up.html">Register</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <script>
+    <!-- ...Your existing HTML code... -->
+
+    var serverUrl = 'http://localhost:8080';
+function login() {
+    var email = document.getElementById('email').value;
+    console.log(email);
+    var password = document.getElementById('password').value;
+    
+    // Determine the server URL based on the environment
+     // Set the default URL here
+    
+    // Make the API call
+    fetch(serverUrl + '/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: email,
+            password: password
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        if (data.message === 'Login successful') {
+            // If login is successful, show 'Login successful' message
+            alert('Login successful');
+            window.location.href = 'first.html'; // Redirect to dashboard
+        } else {
+            // If login fails, show 'Invalid email or password' message
+            alert('Invalid email or password');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+// Frontend JavaScript (already present in your code)
+
+        function onSignIn(googleUser) {
+            // This function will be called when the user successfully signs in via Google
+            var id_token = googleUser.getAuthResponse().id_token;
+
+            // Send the id_token to your backend for verification
+            // Example using fetch API
+            fetch('/auth/google/callback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id_token }),
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                // Handle the response accordingly
+                console.log(data);
+                // Redirect or perform actions based on the response
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+
+// Backend routes (already present in your code)
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+app.get(
+  '/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res) => {
+    // Successful authentication, redirect to a different route or send a response
+    res.redirect('/dashboard');
+  }
+);
+
+</script>
+
+<!-- Your existing HTML code -->
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+<script>
+    function initGoogleAPI() {
+        gapi.load('auth2', function() {
+            gapi.auth2.init({
+    client_id: '415495562108',
+    cookie_policy: 'single_host_origin'
+});
+
+        });
+    }
+</script>
+
+<script>
+    // Ensure the function is called once the Google API script is loaded
+    initGoogleAPI();
+</script>
+
+
+    
+    
+</script>
+    
+    
+</body>
+
+</html>

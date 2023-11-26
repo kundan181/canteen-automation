@@ -1,0 +1,27 @@
+// order.html
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Select all "ADD TO CART" buttons
+    let addToCartButtons = document.querySelectorAll('.addToCartbutton button');
+
+    // Attach click event listeners to each button
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            // Get the associated item details
+            let item = {
+                name: this.parentElement.parentElement.querySelector('.item-title').textContent.trim(),
+                price: parseInt(this.parentElement.parentElement.querySelector('.item-price').textContent.trim().substring(1)) // Assuming price is in the format "₹40"
+            };
+
+            // Add the item to the cart
+            addToCart(item);
+        });
+    });
+
+    // Handle the "ORDER FOOD" button click
+    let orderFoodButton = document.querySelector('.purchaseBtn button');
+    orderFoodButton.addEventListener('click', function () {
+        // Redirect to the payment page
+        window.location.href = 'payment.html';
+    });
+});
